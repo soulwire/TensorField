@@ -21,5 +21,8 @@
     "html-webpack-plugin": "^2.24.1",
     "webpack": "^1.13.3",
     "webpack-dev-server": "^1.16.2"
+  },
+  "dependencies": {
+    "pixi.js": "^4.2.2"
   }
 }

@@ -2,6 +2,7 @@
 // Dependencies
 // ——————————————————————————————————————————————————
 
+import { autoDetectRenderer, Graphics } from 'pixi.js';
 import { THICKNESS } from './config';
 
 // ——————————————————————————————————————————————————
@@ -10,43 +11,38 @@ import { THICKNESS } from './config';
 
 class Renderer {
   constructor() {
-    this.scale = window.devicePixelRatio || 1;
-    this.canvas = document.createElement('canvas');
-    this.context = this.canvas.getContext('2d');
+    this.graphics = new Graphics();
+    this.renderer = new autoDetectRenderer(100, 100, {
+      backgroundColor: 0x1b1b1b,
+      resolution: window.devicePixelRatio || 1,
+      antialias: true
+    });
+    this.canvas = this.renderer.view;
   }
   render(simulation) {
     let currentColor = simulation.particles[0].color;
-    this.context.clearRect(0, 0, this.width, this.height);
-    this.context.strokeStyle = currentColor;
-    this.context.beginPath();
+    this.graphics.clear();
+    this.graphics.lineStyle(1, currentColor, 1);
     simulation.particles.forEach(particle => {
       if (particle.visible) {
         if (particle.color !== currentColor) {
-          this.context.stroke();
-          this.context.strokeStyle = particle.color;
-          this.context.beginPath();
+          this.graphics.lineStyle(1, particle.color, 1);
           currentColor = particle.color;
         }
-        this.context.moveTo(particle.x, particle.y);
+        this.graphics.moveTo(particle.x, particle.y);
         particle.tail.forEach((point, index) => {
-          this.context.lineTo(point.x, point.y);
+          this.graphics.lineTo(point.x, point.y);
         });
       }
     });
-    this.context.stroke();
+    this.renderer.render(this.graphics);
   }
   resize(width, height) {
     this.width = width;
     this.height = height;
-    this.halfWidth = this.width / 2;
-    this.halfHeight = this.height / 2;
-    this.canvas.style.width = this.width + 'px';
-    this.canvas.style.height = this.height + 'px';
-    this.canvas.width = this.width * this.scale;
-    this.canvas.height = this.height * this.scale;
-    this.context.scale(this.scale, this.scale);
-    this.context.lineWidth = THICKNESS;
-    this.context.lineCap = 'round';
+    this.renderer.view.style.height = this.height + 'px';
+    this.renderer.view.style.width = this.width + 'px';
+    this.renderer.resize(this.width, this.height);
   }
 }
 

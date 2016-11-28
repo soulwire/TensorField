@@ -12,8 +12,8 @@ export const FRICTION = 0.75;
 export const GRAVITY = 9.81;
 export const TOGGLE = 0.08;
 export const COLORS = [
-  '#FF4746',
-  '#E8DA5E',
-  '#92B55F',
-  '#487D76'
+  0xFF4746,
+  0xE8DA5E,
+  0x92B55F,
+  0x487D76
 ];
